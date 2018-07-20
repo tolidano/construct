@@ -9,6 +9,11 @@ import (
 	"github.com/urfave/cli"
 )
 
+// App set-up
+func init() {
+
+}
+
 // Command-line utility entry point.
 func main() {
 	app := cli.NewApp()
@@ -24,7 +29,7 @@ func main() {
 			Usage: "Execute a `COMMAND`",
 		},
 		cli.BoolFlag{
-			Name: "verbose, v",
+			Name:  "verbose, v",
 			Usage: "Verbose output",
 		},
 	}
@@ -33,25 +38,9 @@ func main() {
 			fmt.Println("You must specify a configuration file.")
 			os.Exit(1)
 		} else {
-            yamlConfig := construct.ParseFile(c.String("conf"))
-			box := lockbox.New(yamlConfig)
-			if c.Bool("list") {
-				// List secrets
-				secrets, err := box.All()
-				if err != nil {
-					fmt.Println(err)
-				} else {
-					for _, secret := range secrets {
-						fmt.Println(*secret)
-					}
-				}
-			} else if c.String("value") != "" {
-				// Set secret
-				box.Set(c.String("section"), c.String("secret"), c.String("value"))
-				fmt.Println("Saved")
-			} else if c.String("secret") != "" {
-				// Get secret
-				fmt.Println(box.Get(c.String("section"), c.String("secret")))
+			yamlConfig := construct.ParseFile(c.String("conf"))
+			if c.String("command") != "" {
+				// Execute command
 			} else {
 				// Show config
 				fmt.Printf("%+v\n", yamlConfig)
